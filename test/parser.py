@@ -1,89 +1,97 @@
 # from __future__ import absolute_import
-from cf.src import cf
+from cf.src import html
 
 CODEFORCES = 'http://codeforces.com/contest/'
+URI_PREFIX = 'https://www.urionlinejudge.com.br/repository/UOJ_'
+URI_SUFFIX = '_en.html'
 
+def compare_problem_dicts (a, b):
+    assert a['in'] == b['in']
+    assert a['out'] == b['out']
+    
+def compare_contest_dicts (a, b):
+    assert a['site'] == b['site']
+    assert a['problems'] == b['problems']
 
 def test_665_c():
     url = 'http://codeforces.com/contest/665/problem/C'
-    data = cf.parse_problem_HTML(url)
-    exp = [
-        {'in': u'aab', 'out': u'bab'},
-        {'in': u'caaab', 'out': u'cabab'},
-        {'in': u'zscoder', 'out': u'zscoder'}]
-
-    assert exp == data
+    codeforces = html.codeforces()
+    data = codeforces.parse_codeforces_problem(url)
+    exp = {
+        'in': [u'aab', u'caaab', u'zscoder'],
+        'out': [u'bab', u'cabab', u'zscoder']
+    }
+    compare_problem_dicts(exp, data)
 
 
 def test_665_a():
     url = CODEFORCES + '665/problem/A'
-    data = cf.parse_problem_HTML(url)
-    exp = [
-        {
-            'in': u'10 30\n10 35\n05:20',
-            'out': u'5'},
-        {
-            'in': u'60 120\n24 100\n13:00',
-            'out': u'9'}
-    ]
+    codeforces = html.codeforces()
+    data = codeforces.parse_codeforces_problem(url)
+    exp = {
+        'in': [u'10 30\n10 35\n05:20', u'60 120\n24 100\n13:00'],
+        'out': [u'5', u'9']
+    }
 
-    assert exp == data
+    compare_problem_dicts(exp, data)
 
 
 def test_665_b():
     url = CODEFORCES + '665/problem/b'
-    data = cf.parse_problem_HTML(url)
+    codeforces = html.codeforces()
+    data = codeforces.parse_codeforces_problem(url)
 
-    exp = [
-        {
-            'in': u'2 2 5\n'
-            '3 4 1 2 5\n'
-            '1 5\n'
-            '3 1',
-            'out': u'14'}
-    ]
-    assert exp == data
+    exp = {
+        'in': [u'2 2 5\n3 4 1 2 5\n1 5\n3 1'],
+        'out': [u'14']
+    }
+
+    compare_problem_dicts(exp, data)
 
 
 def test_550_e():
     url = CODEFORCES + '550/problem/E'
-    data = cf.parse_problem_HTML(url)
+    codeforces = html.codeforces()
+    data = codeforces.parse_codeforces_problem(url)
 
-    exp = [
-        {
-            'in': u'4\n'
-            '0 1 1 0',
-            'out': u'YES\n'
-            '(((0)->1)->(1->0))'},
-        {
-            'in': u'2\n1 1',
-            'out': u'NO'},
-        {
-            'in': u'1\n0',
-            'out': u'YES\n0'}
-    ]
-    assert exp == data
+    exp = {
+        'in': [
+            u'4\n0 1 1 0',
+            u'2\n1 1',
+            u'1\n0'
+        ],
+        'out': [
+            u'YES\n(((0)->1)->(1->0))',
+            u'NO',
+            u'YES\n0'
+        ]
+    }
+
+    compare_problem_dicts(exp, data)
 
 
 def test_621_a():
     url = CODEFORCES + '621/problem/a'
-    data = cf.parse_problem_HTML(url)
+    codeforces = html.codeforces()
+    data = codeforces.parse_codeforces_problem(url)
 
-    exp = [
-        {
-            'in': u'3\n1 2 3',
-            'out': u'6'},
-        {
-            'in': u'5\n999999999 999999999 999999999 999999999 999999999',
-            'out': u'3999999996'}
-    ]
-
-    assert exp == data
+    exp = {
+        'in': [
+            u'3\n1 2 3',
+            u'5\n999999999 999999999 999999999 999999999 999999999'
+        ],
+        'out': [
+            u'6',
+            u'3999999996'
+        ]
+    }
+    compare_problem_dicts(exp, data)
 
 
 def test_contest_665():
     url = CODEFORCES + '665/'
-    data = cf.parse_contest_HTML(url)
+    codeforces = html.codeforces()
+    data = codeforces.parse_codeforces_contest(url)
 
     exp = {
         'site': 'codeforces',
@@ -98,12 +106,13 @@ def test_contest_665():
         ]
     }
 
-    assert exp == data
+    compare_contest_dicts(exp, data)
 
 
 def test_contest_1():
     url = CODEFORCES + '1/'
-    data = cf.parse_contest_HTML(url)
+    codeforces = html.codeforces()
+    data = codeforces.parse_codeforces_contest(url)
 
     exp = {
         'site': 'codeforces',
@@ -114,5 +123,149 @@ def test_contest_1():
             u'/contest/1/problem/C'
         ]
     }
-    
-    assert exp == data
+
+    compare_contest_dicts(exp, data)
+
+
+def test_uri1394():
+    url = URI_PREFIX + '1394' + URI_SUFFIX
+    uri = html.uri()
+    data = uri.parse_uri_problem(url)
+
+    exp = {
+        'in': [
+            u'4 2 6\n'
+            '0 < 3\n'
+            '3 = 2\n'
+            '2 < 0\n'
+            '1 < 0\n'
+            '2 = 0\n'
+            '3 < 0\n'
+            '4 1 5\n'
+            '2 = 0\n'
+            '0 < 1\n'
+            '1 = 3\n'
+            '2 < 1\n'
+            '0 < 3\n'
+            '4 2 5\n'
+            '2 = 0\n'
+            '0 < 1\n'
+            '1 = 3\n'
+            '2 < 1\n'
+            '0 < 3\n'
+            '2 1 1\n'
+            '1 < 0\n'
+            '4 1 1\n'
+            '0 < 1\n'
+            '4 1 2\n'
+            '0 < 1\n'
+            '0 < 2\n'
+            '0 0 0'
+        ],
+        'out': [
+            u'Y\n'
+            'N\n'
+            'Y\n'
+            'Y\n'
+            'Y\n'
+            'N'
+        ]
+    }
+
+    compare_problem_dicts(exp, data)
+
+
+def test_uri1393():
+
+    url = URI_PREFIX + '1393' + URI_SUFFIX
+    uri = html.uri()
+
+    data = uri.parse_uri_problem(url)
+
+    exp = {
+        'in': [
+            u'1\n'
+            '4\n'
+            '2\n'
+            '10\n'
+            '0'
+        ],
+        'out': [
+            u'1\n'
+            '5\n'
+            '2\n'
+            '89'
+        ]
+    }
+
+    compare_problem_dicts(exp, data)
+
+
+def test_uri1300():
+
+    url = URI_PREFIX + '1300' + URI_SUFFIX
+    uri = html.uri()
+
+    data = uri.parse_uri_problem(url)
+
+    exp = {
+        'in': [
+            u'90\n'
+            '65\n'
+            '66\n'
+            '67\n'
+            '128\n'
+            '0\n'
+            '180'
+        ],
+        'out': [
+            u'Y\n'
+            'N\n'
+            'Y\n'
+            'N\n'
+            'N\n'
+            'Y\n'
+            'Y'
+        ]
+    }
+
+    compare_problem_dicts(exp, data)
+
+
+def test_uri1398():
+    url = URI_PREFIX + '1398' + URI_SUFFIX
+    uri = html.uri()
+
+    data = uri.parse_uri_problem(url)
+
+    exp = {
+        'in': [u'0#\n'
+               '1010101#'],
+        'out': [
+            u'YES\n'
+            'NO'
+        ]
+    }
+
+    compare_problem_dicts(exp, data)
+
+
+def test_uri1400():
+    url = URI_PREFIX + '1400' + URI_SUFFIX
+    uri = html.uri()
+
+    data = uri.parse_uri_problem(url)
+
+    exp = {
+        'in': ['4 3 1\n'
+               '4 3 2\n'
+               '4 3 3\n'
+               '4 3 4\n'
+               '0 0 0'],
+        'out': ['17\n'
+                '21\n'
+                '27\n'
+                '35']
+    }
+    print data, exp
+    compare_problem_dicts(exp, data)
