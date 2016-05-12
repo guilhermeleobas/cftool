@@ -5,13 +5,16 @@ CODEFORCES = 'http://codeforces.com/contest/'
 URI_PREFIX = 'https://www.urionlinejudge.com.br/repository/UOJ_'
 URI_SUFFIX = '_en.html'
 
-def compare_problem_dicts (a, b):
+
+def compare_problem_dicts(a, b):
     assert a['in'] == b['in']
     assert a['out'] == b['out']
-    
-def compare_contest_dicts (a, b):
+
+
+def compare_contest_dicts(a, b):
     assert a['site'] == b['site']
     assert a['problems'] == b['problems']
+
 
 def test_665_c():
     url = 'http://codeforces.com/contest/665/problem/C'
@@ -269,3 +272,87 @@ def test_uri1400():
     }
     print data, exp
     compare_problem_dicts(exp, data)
+
+
+def test_url_uri():
+    """
+    instead of specify a URL, the user can also specify the number of the problem
+    in combination with some letters that identify the site
+
+    i.e.
+        uri1300
+        urionlinejudge.com.br/judge/en/problems/view/1300
+        urionlinejudge.com.br/judge/pt/problems/view/1350
+    """
+
+    uri = html.uri()
+    valid = [
+        'https://www.urionlinejudge.com.br/judge/en/problems/view/1394',
+        'https://www.urionlinejudge.com.br/judge/en/problems/view/1300',
+        'www.urionlinejudge.com.br/judge/en/problems/view/1300',
+        'urionlinejudge.com.br/judge/en/problems/view/1300',
+        'uri1300',
+        'urionlinejudge.com.br/judge/pt/problems/view/1350'
+        'uri100',
+        'uri1'
+    ]
+
+    invalid = [
+        'https://www.urionline.com.br/judge/en/problems/view/1394',
+        # missing .br
+        'https://www.urionlinejudge.com/judge/en/problems/view/1394',
+        # missing problem id
+        'uri',
+        # words instead of numbers in the problem ind
+        'uriabcd',
+        # missing 'uri'
+        '1300'
+    ]
+
+    for item in valid:
+        assert uri.is_me(item)
+
+    for item in invalid:
+        assert uri.is_me(item) == False
+
+
+def test_url_codeforces():
+    """
+    instead of specify a URL, the user can also specify the number of the problem
+    in combination with some letters that identify the site
+
+    i.e.
+        cf33a # problem 33A
+        cf100 # contest 100
+        codeforces.com/contest/33 # contest 33
+        codeforces.com/contest/10/problem/A # problem 10A
+    """
+
+    codeforces = html.codeforces()
+    valid = [
+        'cf33a',
+        'cf100',
+        'codeforces.com/contest/33',
+        'http://codeforces.com/contest/10/problem/A',
+        'http://www.codeforces.com/contest/100/problem/A'
+        'https://codeforces.com/contest/101',
+        'https://www.codeforces.com/contest/11/problem/E',
+        'codeforces100',
+        'codeforces101A',
+        'cf1e'
+    ]
+
+    invalid = [
+        'cf',
+        '101',
+        '100A',
+        'cfA',
+        'codeforces.com',
+        'urionlinejudge.com.br/judge'
+    ]
+
+    for item in valid:
+        assert codeforces.is_me(item)
+
+    for item in invalid:
+        assert codeforces.is_me(item) == False
