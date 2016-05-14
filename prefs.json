@@ -1,0 +1,48 @@
+{
+  "c++": {
+    "compile": "g++ {} -o main",
+    "run": "./main",
+    "extensions": [
+      ".cpp",
+      ".cc",
+      ".cxx"
+    ]
+  },
+  "c++11": {
+    "compile": "g++ -std=c++11 {} -o main",
+    "run": "./main",
+    "extensions": [
+      ".cpp",
+      ".cc",
+      ".cxx"
+    ]
+  },
+  "c": {
+    "compile": "gcc {} -o main",
+    "run": "./main",
+    "extensions": [
+      ".c"
+    ]
+  },
+  "python": {
+    "compile": "pass",
+    "run": "python {}",
+    "extensions": [
+      ".py"
+    ]
+  },
+  "python3": {
+    "compile": "pass",
+    "run": "python3 {}",
+    "extensions": [
+      ".py"
+    ]
+  },
+  "ruby:": {
+    "compile": "pass",
+    "run": "rb {}",
+    "extensions": [
+      ".rb"
+    ]
+  }
+}
