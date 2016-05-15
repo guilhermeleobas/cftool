@@ -11,7 +11,7 @@ prefs = json.load(file('prefs.json'), object_pairs_hook=OrderedDict)
 class COMPILATION_CODE:
     SUCCESS = 0
     PASS = 1
-    NOT_DETECTED = 2
+    UNKNOWN_LANGUAGE = 2
     ERROR = 3
 
 
@@ -31,7 +31,7 @@ def format_time(val):
         return str(int(round(val))) + 'ms'
 
 
-def detect_language(prefs, extension):
+def detect_language(extension):
     for language in prefs:
         if extension in prefs[language][u'extensions']:
             return language
@@ -43,10 +43,28 @@ def compile(filename, language=None):
 
     # Get the language extension
     if (language is None):
-        language = detect_language(prefs, extension)
+        language = detect_language(extension)
+    else:
+        # chech if language passed as parameter exists
+        if language not in prefs:
+            return {
+                'status': COMPILATION_CODE.UNKNOWN_LANGUAGE,
+                'stdout': '',
+                'stderr': ''
+            }
 
+    # Unknown language or language not supported or wrong filename
+    if language is None:
+        return {
+            'status': COMPILATION_CODE.UNKNOWN_LANGUAGE,
+            'stdout': '',
+            'stderr': ''
+        }
+
+    # get the compile command for the language detected before
     compile_command = prefs[language]['compile'].format(filename)
     if compile_command == 'pass':
+        # Not necessary in interpreted languages (Python, Ruby, Javascript)
         return {
             'status': COMPILATION_CODE.PASS,
             'stdout': '',
@@ -54,10 +72,9 @@ def compile(filename, language=None):
         }
     elif compile_command is None:
         # return with error!
-        # unknown file extension
         # language no supported or invalid file extension
         return {
-            'status': COMPILATION_CODE.NOT_DETECTED,
+            'status': COMPILATION_CODE.UNKNOWN_LANGUAGE,
             'stdout': '',
             'stderr': ''
         }

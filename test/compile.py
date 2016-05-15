@@ -131,5 +131,43 @@ def test_c_bad():
         '                          ;\n'
         '1 error generated.\n'
     }
+
+    compare_dicts(ret, compile(filename))
+
+
+def test_unknown_extension():
+    filename = 'file.txt'
+
+    ret = {
+        'status': COMPILATION_CODE.UNKNOWN_LANGUAGE,
+        'stdout': '',
+        'stderr': ''
+    }
+
+    compare_dicts(ret, compile(filename))
+
+
+def test_cc_cpp():
+    filename = './test/scode/good.cc'
+    language = 'c++'
+
+    ret = {
+        'status': COMPILATION_CODE.SUCCESS,
+        'stdout': '',
+        'stderr': ''
+    }
+
+    compare_dicts(ret, compile(filename))
     
-    compare_dicts(ret, compile(filename));
+    
+def test_cc_cpp11():
+    filename = './test/scode/good.cc'
+    language = 'c++11'
+    
+    ret = {
+        'status': COMPILATION_CODE.SUCCESS,
+        'stdout': '',
+        'stderr': ''
+    }
+
+    compare_dicts(ret, compile(filename))
