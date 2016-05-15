@@ -1,4 +1,4 @@
-from cf.src.compile import format_time
+from cf.src.run import format_time
 
 
 def test_ms():
