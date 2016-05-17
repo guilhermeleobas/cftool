@@ -120,3 +120,25 @@ def test_message_empty_folder(capsys):
         run(program, language, folder)
         out, err = capsys.readouterr()
         assert 'Empty folder' == err
+        
+def test_python_echo():
+    filename = './test/scode/echo.py'
+    language = 'python'
+    folder = './test/problems/echo/'
+    
+    exp = ['teste', '12345']
+    
+    out_arr = run(filename, language, folder)
+    
+    """
+    output is a dict():
+        'status':
+        'stdout':
+        'stderr':
+        'time':
+    """
+    for output in out_arr:
+        assert output['stdout'] in exp
+        assert output['status'] == 0
+    
+    

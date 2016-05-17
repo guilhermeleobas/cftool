@@ -66,7 +66,7 @@ def run_code(run_cmd, input_file):
 # run the program for every input on a folder
 # program is the executable (in compiled languages - ./main)
 # or the file with the source code in interpreted languages (main.py)
-def run(program, language, folder):
+def run(filename, language, folder):
 
     if not os.path.exists(folder):
         # pretty_print_error ();
@@ -76,7 +76,7 @@ def run(program, language, folder):
     # otherwise returns a dict with the output of 'ls `folder`'
     ret = ls(folder)
 
-    if type(ret) != type({}):
+    if not isinstance(ret, list):
         print_error_and_exit(E_RUN[ret])
 
     files = ret
@@ -85,12 +85,15 @@ def run(program, language, folder):
     outputs = [f for f in files if 'out' in f]
 
     # we already know that the language exists in prefs
-    run_cmd = prefs[language][u'run'].format(program)
-
+    run_cmd = prefs[language][u'run'].format(filename).split()
+    
+    out_arr = []
     for input in inputs:
-        print run_code(run_cmd, os.path.join(folder, input))
+        out_arr.append(
+            run_code(run_cmd, os.path.join(folder, input))
+        )
 
-    return E_RUN.SUCCESS
+    return out_arr
 
 if __name__ == '__main__':
     print run_code('./main', 'a.cc')
