@@ -1,7 +1,7 @@
 import time
 import sys
 
-time.sleep(5) # sleep for 5 seconds
+time.sleep(0.5) # sleep for 5 seconds
 
 s = raw_input()
 

@@ -1,9 +1,9 @@
 import os
 import pytest
+import errno
 
 from cf.src.run import run_code, run
 from cf.src.compile import compile
-from cf.src.enums import *
 
 def test_attributes():
     filename = './test/scode/echo.cc'
@@ -100,26 +100,24 @@ def test_echo2():
     for i in range(len(ret)):
         assert ans[i] == ret[i]['stdout']
 
-def test_message_folder_not_found(capsys):
+def test_message_folder_not_found():
     language = 'c++'
     folder = './test/problems/lorem_ipsum_folder'
-    program = './main'
+    filename = './test/scode/echo.cc'
+    
+    with pytest.raises(OSError) as excinfo:
+        run(filename, language, folder)
+    assert "[Errno 2] No such file or directory: './test/problems/lorem_ipsum_folder'" == str(excinfo.value)
 
-    with pytest.raises(SystemExit):
-        run(program, language, folder)
-        out, err = capsys.readouterr()
-        assert 'Folder not found' == err
 
-
-def test_message_empty_folder(capsys):
+def test_message_empty_folder():
     language = 'c++'
     folder = './test/problems/empty_folder'
-    program = './main'
+    filename = './test/scode/echo.cc'
 
-    with pytest.raises(SystemExit):
-        run(program, language, folder)
-        out, err = capsys.readouterr()
-        assert 'Empty folder' == err
+    with pytest.raises(SystemExit) as excinfo:
+        run(filename, language, folder)
+    assert './test/problems/empty_folder directory is empty' == str(excinfo.value)
         
 def test_python_echo():
     filename = './test/scode/echo.py'
