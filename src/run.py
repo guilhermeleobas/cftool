@@ -1,14 +1,18 @@
 import json
 import time
 import os
+import sys
+import errno
 from collections import OrderedDict
 from subprocess import Popen, PIPE, call
 
-# enums
-from enums import *
-from pretty_print import *
 
 prefs = json.load(file('prefs.json'), object_pairs_hook=OrderedDict)
+
+# FileNotFoundError was only introduced in python 3
+# http://stackoverflow.com/questions/26745283/how-do-i-import-filenotfounderror-from-python-3
+class FileNotFoundError(OSError):
+    pass
 
 def format_time(val):
     ms = 1
@@ -24,23 +28,6 @@ def format_time(val):
         return str(int(round(val / s))) + 's'
     else:
         return str(int(round(val))) + 'ms'
-
-
-def ls(folder):
-    p = Popen(['ls', folder], stdout=PIPE, stderr=PIPE)
-
-    output, err = p.communicate()
-
-    if p.returncode < 0:
-        return E_RUN.FOLDER_NOT_FOUND
-
-    if output == '':
-        # pretty_print_error (empty_folder)
-        return E_RUN.EMPTY_FOLDER
-
-    # For some reason the last element is ''
-    # [0:-1] => return a list without the last element
-    return output.split('\n')[0:-1]
 
 # run a program and returns it's output
 # i.e.
@@ -68,25 +55,16 @@ def run_code(run_cmd, input_file):
 # or the file with the source code in interpreted languages (main.py)
 def run(filename, language, folder):
 
-    if not os.path.exists(folder):
-        # pretty_print_error ();
-        print_error_and_exit(E_RUN.describe(E_RUN.FOLDER_NOT_FOUND))
-
-    # returns a number < 0 if error
-    # otherwise returns a dict with the output of 'ls `folder`'
-    ret = ls(folder)
-
-    if not isinstance(ret, list):
-        print_error_and_exit(E_RUN[ret])
-
-    files = ret
+    files = os.listdir (folder);
+    if files == []:
+        sys.exit ('{} directory is empty'.format(folder))
 
     inputs = [f for f in files if 'in' in f]
     outputs = [f for f in files if 'out' in f]
 
     # we already know that the language exists in prefs
     run_cmd = prefs[language][u'run'].format(filename).split()
-    
+
     out_arr = []
     for input in inputs:
         out_arr.append(
