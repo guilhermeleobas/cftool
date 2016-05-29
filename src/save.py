@@ -5,7 +5,7 @@ import subprocess
 def save(site_id, problem_id, data):
     """
     site_id: cf or uri or something that uniquely identifies the website
-    problem_id: id of the problem. i.e. codeforces.com/contest/problem/101 <---- id
+    problem_id: id of the problem. i.e. codeforces.com/contest/101/problem/A <---- id
     data looks like:
     {
         'in': [
