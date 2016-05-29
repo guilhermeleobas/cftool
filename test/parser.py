@@ -356,3 +356,35 @@ def test_url_codeforces():
 
     for item in invalid:
         assert codeforces.is_me(item) == False
+
+def test_codeforces_pattern_match():
+    valid = [
+        'cf33a',
+        'cf100',
+        'codeforces.com/contest/33',
+        'http://codeforces.com/contest/10/problem/A',
+        'http://www.codeforces.com/contest/100/problem/A',
+        'https://codeforces.com/contest/101',
+        'https://www.codeforces.com/contest/11/problem/E',
+        'codeforces100',
+        'codeforces101A',
+        'cf1e'
+    ]
+
+    exp = [
+        ['33', 'a'],
+        ['100', None],
+        ['33', None],
+        ['10', 'A'],
+        ['100', 'A'],
+        ['101', None],
+        ['11', 'E'],
+        ['100', None],
+        ['101', 'A'],
+        ['1', 'e']
+    ]
+    
+    codeforces = html.codeforces();
+    
+    for i, item in enumerate(valid):
+        assert codeforces.pattern_match(item) == exp[i]

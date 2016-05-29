@@ -7,12 +7,11 @@ import re
 
 class codeforces:
 
-
     patterns = [
-        '(http(s)?://)?(www.)?codeforces.com/contest\/(\d+)(/problem/[A-z])?',
-        '(cf|codeforces)(\d+)([A-z]?)'
+        '(?:http(?:s)?://)?(?:www.)?codeforces.com/contest\/(\d+)(?:/problem/)?([a-z]|[A-Z])?',
+        '(?:cf|codeforces)(\d+)([A-z])?'
     ]
-    
+
     def parse_codeforces_problem(self, url):
         r = requests.get(url)
         html = BeautifulSoup(r.content, 'html.parser')
@@ -62,25 +61,32 @@ class codeforces:
             'problems': links
         }
 
+    def pattern_match(self, url):
+        for pattern in self.patterns:
+            m = re.match(pattern, url)
+
+            if m:
+                return [m.group(1), m.group(2)]
+        return None
+
     def is_me(self, url):
         """
         check if URL belongs to codeforces
         """
-        
-        for pattern in self.patterns:
-            m = re.match (pattern, url)
-            
-            if m:
-                return True
-        return False
+        m = self.pattern_match(url)
+        if m is None:
+            return False
+        else:
+            return True
 
+    def download(self, url):
+        pass
 
 class uri:
 
     patterns = [
         '(https:?//)?(www.)?urionlinejudge.com.br/judge/(.*)/problems/view/(.*)',
-        'uri(\d+)'
-    ]
+        'uri(\d+)']
 
     def parse_uri_contest(self, url):
         return None
