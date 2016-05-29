@@ -3,14 +3,13 @@
 import requests
 from bs4 import BeautifulSoup
 import re
-
+import save
 
 class codeforces:
 
     patterns = [
         '(?:http(?:s)?://)?(?:www.)?codeforces.com/contest\/(\d+)(?:/problem/)?([a-z]|[A-Z])?',
-        '(?:cf|codeforces)(\d+)([A-z])?'
-    ]
+        '(?:cf|codeforces)(\d+)([A-z])?']
 
     def parse_codeforces_problem(self, url):
         r = requests.get(url)
@@ -34,18 +33,14 @@ class codeforces:
     def parse_codeforces_contest(self, url):
         """
         return variable looks like:
-        {
-            site: 'codeforces',
-            problems:
-              [
-                /contest/665/problem/A
-                /contest/665/problem/B
-                /contest/665/problem/C
-                /contest/665/problem/D
-                /contest/665/problem/E
-                /contest/665/problem/F
-              ]
-        }
+        [
+            /contest/665/problem/A
+            /contest/665/problem/B
+            /contest/665/problem/C
+            /contest/665/problem/D
+            /contest/665/problem/E
+            /contest/665/problem/F
+        ]
         """
         r = requests.get(url)
         html = BeautifulSoup(r.content, 'html.parser')
@@ -56,10 +51,7 @@ class codeforces:
         for item in aux:
             links.append(item.find('a').get('href'))
 
-        return {
-            'site': 'codeforces',
-            'problems': links
-        }
+        return links
 
     def pattern_match(self, url):
         for pattern in self.patterns:
@@ -80,7 +72,22 @@ class codeforces:
             return True
 
     def download(self, url):
-        pass
+        l = self.pattern_match(url)
+
+        probs = []
+        if l[1] is None:
+            probs = self.parse_codeforces_contest(
+                'http://codeforces.com/contest/' + l[0])
+
+        probs = map(lambda x: 'http://codeforces.com' + x, probs)
+
+        aux = [self.parse_codeforces_problem(p) for p in probs]
+
+        print len(aux)
+        letters = map(lambda x: chr(x + ord('a')), range(len(aux)))
+
+        for i, in_out in enumerate(aux):
+            save.save('cf', l[0] + letters[i], in_out)
 
 class uri:
 
