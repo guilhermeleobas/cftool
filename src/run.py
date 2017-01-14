@@ -33,45 +33,53 @@ def format_time(val):
 # i.e.
 #   ./main < input_file
 #   python main.py < input_file
-def run_code(run_cmd, input_file):
+def run_code(run_cmd, input_file, output_file, testcase):
 
     start = time.time()
 
+    output = open(output_file).read()
+
     p = Popen(run_cmd, stdin=file(input_file, 'r'), stdout=PIPE, stderr=PIPE)
-    output, err = p.communicate()
+    stdout, err = p.communicate()
 
     end = time.time()
     return {
         # return code < 0 indicates that this child process was terminated
-        'status': p.returncode,
-        'time': format_time(end - start),
-        'stdout': output,
-        'stderr': err
+        "status": p.returncode,
+        "time": format_time(end - start),
+        "stdout": stdout.strip(),
+        "stderr": err,
+        "expected": output.strip(),
+        "testcase": testcase
     }
 
-
 # run the program for every input on a folder
-# program is the executable (in compiled languages - ./main)
-# or the file with the source code in interpreted languages (main.py)
-def run(filename, language, folder):
+def run(filename, language, folder, single_input = None):
 
     files = os.listdir (folder);
     if files == []:
         sys.exit ('{} directory is empty'.format(folder))
 
     inputs = [f for f in files if 'in' in f]
-    outputs = [f for f in files if 'out' in f]
+    outputs = [os.path.join(folder, f) for f in files if 'out' in f]
 
     # we already know that the language exists in prefs
     run_cmd = prefs[language][u'run'].format(filename).split()
 
-    out_arr = []
-    for input in inputs:
-        out_arr.append(
-            run_code(run_cmd, os.path.join(folder, input))
-        )
+    if single_input is not None:
+        single_input = single_input.strip('.in|.out')
 
-    return out_arr
+        if (single_input + '.in') not in inputs:
+            sys.exit( 'Testcase {} not found!'.format(
+                        os.path.join(folder, single_input + '.in'))
+                    )
+
+        inputs = [single_input + '.in']
+        outputs = [os.path.join(folder, single_input + '.out')]
+
+    for i, input in enumerate(inputs):
+        test_number = input.strip('.in')
+        yield (run_code(run_cmd, os.path.join(folder, input), outputs[i], test_number))
 
 if __name__ == '__main__':
     print run_code('./main', 'a.cc')

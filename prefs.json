@@ -17,6 +17,15 @@
       ".cxx"
     ]
   },
+  "c++14": {
+    "compile": "g++ -std=c++14 {} -o main",
+    "run": "./main",
+    "extensions": [
+      ".cpp",
+      ".cc",
+      ".cxx"
+    ]
+  },
   "c": {
     "compile": "gcc {} -o main",
     "run": "./main",

@@ -1,4 +1,5 @@
 from cf.src.compile import *
+import pytest
 
 
 def compare_dicts(a, b):
@@ -136,15 +137,12 @@ def test_c_bad():
 
 
 def test_unknown_extension():
-    filename = 'file.txt'
-
-    ret = {
-        'status': COMPILATION_CODE.UNKNOWN_LANGUAGE,
-        'stdout': '',
-        'stderr': ''
-    }
-
-    compare_dicts(ret, compile(filename))
+    filename = [ 'file.txt' , 'a.kc']
+   
+    with pytest.raises(compilation_exception) as e_info:
+        for f in filename:
+            compile(f)
+    
 
 
 def test_cc_cpp():

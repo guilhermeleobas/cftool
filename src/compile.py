@@ -14,12 +14,22 @@ class COMPILATION_CODE:
     UNKNOWN_LANGUAGE = 2
     ERROR = 3
 
+class compilation_exception(Exception):
+    pass
 
-def detect_language(extension):
+
+def detect_language(st):
+    if '.' in st and st[0] != '.':
+        extension = os.path.splitext(st)[1]
+    else:
+        extension = st
+
     for language in prefs:
         if extension in prefs[language][u'extensions']:
             return language
-    return None
+
+    print st, extension, 'hello'
+    raise compilation_exception("Unknown language or language not supported or wrong filename")
 
 
 def compile(filename, language=None):
@@ -31,19 +41,21 @@ def compile(filename, language=None):
     else:
         # chech if language passed as parameter exists
         if language not in prefs:
-            return {
-                'status': COMPILATION_CODE.UNKNOWN_LANGUAGE,
-                'stdout': '',
-                'stderr': ''
-            }
+            raise compilation_exception("Unknown language")
+            # return {
+            #     'status': COMPILATION_CODE.UNKNOWN_LANGUAGE,
+            #     'stdout': '',
+            #     'stderr': ''
+            # }
 
     # Unknown language or language not supported or wrong filename
     if language is None:
-        return {
-            'status': COMPILATION_CODE.UNKNOWN_LANGUAGE,
-            'stdout': '',
-            'stderr': ''
-        }
+        raise compilation_exception("Unknown language or language not supported or wrong filename")
+        # return {
+        #     'status': COMPILATION_CODE.UNKNOWN_LANGUAGE,
+        #     'stdout': '',
+        #     'stderr': ''
+        # }
 
     # get the compile command for the language detected before
     compile_command = prefs[language]['compile'].format(filename)
@@ -54,14 +66,15 @@ def compile(filename, language=None):
             'stdout': '',
             'stderr': ''
         }
-    elif compile_command is None:
-        # return with error!
-        # language no supported or invalid file extension
-        return {
-            'status': COMPILATION_CODE.UNKNOWN_LANGUAGE,
-            'stdout': '',
-            'stderr': ''
-        }
+    # elif compile_command is None:
+    #     # return with error!
+    #     # language no supported or invalid file extension
+    #     raise compilation_exception("Unknown language")
+    #     # return {
+    #     #     'status': COMPILATION_CODE.UNKNOWN_LANGUAGE,
+    #     #     'stdout': '',
+    #     #     'stderr': ''
+    #     # }
 
     cmd = compile_command.split(' ')
 

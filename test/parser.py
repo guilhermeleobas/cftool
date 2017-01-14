@@ -11,11 +11,6 @@ def compare_problem_dicts(a, b):
     assert a['out'] == b['out']
 
 
-def compare_contest_dicts(a, b):
-    assert a['site'] == b['site']
-    assert a['problems'] == b['problems']
-
-
 def test_665_c():
     url = 'http://codeforces.com/contest/665/problem/C'
     codeforces = html.codeforces()
@@ -96,20 +91,16 @@ def test_contest_665():
     codeforces = html.codeforces()
     data = codeforces.parse_codeforces_contest(url)
 
-    exp = {
-        'site': 'codeforces',
-        'problems':
-        [
-            u'/contest/665/problem/A',
-            u'/contest/665/problem/B',
-            u'/contest/665/problem/C',
-            u'/contest/665/problem/D',
-            u'/contest/665/problem/E',
-            u'/contest/665/problem/F'
-        ]
-    }
+    exp = [
+        u'/contest/665/problem/A',
+        u'/contest/665/problem/B',
+        u'/contest/665/problem/C',
+        u'/contest/665/problem/D',
+        u'/contest/665/problem/E',
+        u'/contest/665/problem/F'
+    ]
 
-    compare_contest_dicts(exp, data)
+    exp == data
 
 
 def test_contest_1():
@@ -117,17 +108,12 @@ def test_contest_1():
     codeforces = html.codeforces()
     data = codeforces.parse_codeforces_contest(url)
 
-    exp = {
-        'site': 'codeforces',
-        'problems':
-        [
-            u'/contest/1/problem/A',
-            u'/contest/1/problem/B',
-            u'/contest/1/problem/C'
-        ]
-    }
-
-    compare_contest_dicts(exp, data)
+    exp = [
+        u'/contest/1/problem/A',
+        u'/contest/1/problem/B',
+        u'/contest/1/problem/C'
+    ]
+    exp == data
 
 
 def test_uri1394():
@@ -356,3 +342,37 @@ def test_url_codeforces():
 
     for item in invalid:
         assert codeforces.is_me(item) == False
+
+def test_codeforces_pattern_match():
+    valid = [
+        'cf33a',
+        'cf100',
+        'codeforces.com/contest/33',
+        'http://codeforces.com/contest/10/problem/A',
+        'http://www.codeforces.com/contest/100/problem/A',
+        'https://codeforces.com/contest/101',
+        'https://www.codeforces.com/contest/11/problem/E',
+        'codeforces100',
+        'codeforces101A',
+        'cf1e',
+        'cf201'
+    ]
+
+    exp = [
+        ['33', 'a'],
+        ['100', None],
+        ['33', None],
+        ['10', 'A'],
+        ['100', 'A'],
+        ['101', None],
+        ['11', 'E'],
+        ['100', None],
+        ['101', 'A'],
+        ['1', 'e'],
+        ['201', None]
+    ]
+
+    codeforces = html.codeforces()
+
+    for i, item in enumerate(valid):
+        assert codeforces.pattern_match(item) == exp[i]

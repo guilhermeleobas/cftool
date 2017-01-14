@@ -3,17 +3,16 @@
 import requests
 from bs4 import BeautifulSoup
 import re
-
+import save
 
 class codeforces:
 
-
     patterns = [
-        '(http(s)?://)?(www.)?codeforces.com/contest\/(\d+)(/problem/[A-z])?',
-        '(cf|codeforces)(\d+)([A-z]?)'
-    ]
-    
+        '(?:http(?:s)?://)?(?:www.)?codeforces.com/contest\/(\d+)(?:/problem/)?([a-z]|[A-Z])?',
+        '(?:cf|codeforces)(\d+)([A-z])?']
+
     def parse_codeforces_problem(self, url):
+        print ('Downloading: {}'.format(url))
         r = requests.get(url)
         html = BeautifulSoup(r.content, 'html.parser')
 
@@ -35,18 +34,14 @@ class codeforces:
     def parse_codeforces_contest(self, url):
         """
         return variable looks like:
-        {
-            site: 'codeforces',
-            problems:
-              [
-                /contest/665/problem/A
-                /contest/665/problem/B
-                /contest/665/problem/C
-                /contest/665/problem/D
-                /contest/665/problem/E
-                /contest/665/problem/F
-              ]
-        }
+        [
+            /contest/665/problem/A
+            /contest/665/problem/B
+            /contest/665/problem/C
+            /contest/665/problem/D
+            /contest/665/problem/E
+            /contest/665/problem/F
+        ]
         """
         r = requests.get(url)
         html = BeautifulSoup(r.content, 'html.parser')
@@ -57,30 +52,51 @@ class codeforces:
         for item in aux:
             links.append(item.find('a').get('href'))
 
-        return {
-            'site': 'codeforces',
-            'problems': links
-        }
+        links = map(lambda x: 'http://codeforces.com' + x, links)
+
+        return links
+
+    def pattern_match(self, url):
+        for pattern in self.patterns:
+            m = re.match(pattern, url)
+
+            if m:
+                return [m.group(1), m.group(2)]
+        return None
 
     def is_me(self, url):
         """
         check if URL belongs to codeforces
         """
-        
-        for pattern in self.patterns:
-            m = re.match (pattern, url)
-            
-            if m:
-                return True
-        return False
+        m = self.pattern_match(url)
+        if m is None:
+            return False
+        else:
+            return True
 
+    def download(self, url):
+        l = self.pattern_match(url)
+
+        probs = []
+        if l[1] is None:
+            probs = self.parse_codeforces_contest('http://codeforces.com/contest/' + l[0])
+            letters = map(lambda x: chr(x + ord('a')), range( len(probs) ) )
+        else:
+            probs = [u'http://codeforces.com/contest/' + l[0] +'/problem/' + l[1].upper()]
+            letters = [l[1]]
+
+        aux = [self.parse_codeforces_problem(p) for p in probs]
+
+        for i, in_out in enumerate(aux):
+            save.save('cf', l[0] + letters[i], in_out)
+
+#######
 
 class uri:
 
     patterns = [
         '(https:?//)?(www.)?urionlinejudge.com.br/judge/(.*)/problems/view/(.*)',
-        'uri(\d+)'
-    ]
+        'uri(\d+)']
 
     def parse_uri_contest(self, url):
         return None
