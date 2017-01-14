@@ -12,6 +12,7 @@ class codeforces:
         '(?:cf|codeforces)(\d+)([A-z])?']
 
     def parse_codeforces_problem(self, url):
+        print ('Downloading: {}'.format(url))
         r = requests.get(url)
         html = BeautifulSoup(r.content, 'html.parser')
 
@@ -51,6 +52,8 @@ class codeforces:
         for item in aux:
             links.append(item.find('a').get('href'))
 
+        links = map(lambda x: 'http://codeforces.com' + x, links)
+
         return links
 
     def pattern_match(self, url):
@@ -76,18 +79,18 @@ class codeforces:
 
         probs = []
         if l[1] is None:
-            probs = self.parse_codeforces_contest(
-                'http://codeforces.com/contest/' + l[0])
-
-        probs = map(lambda x: 'http://codeforces.com' + x, probs)
+            probs = self.parse_codeforces_contest('http://codeforces.com/contest/' + l[0])
+            letters = map(lambda x: chr(x + ord('a')), range( len(probs) ) )
+        else:
+            probs = [u'http://codeforces.com/contest/' + l[0] +'/problem/' + l[1].upper()]
+            letters = [l[1]]
 
         aux = [self.parse_codeforces_problem(p) for p in probs]
 
-        print len(aux)
-        letters = map(lambda x: chr(x + ord('a')), range(len(aux)))
-
         for i, in_out in enumerate(aux):
             save.save('cf', l[0] + letters[i], in_out)
+
+#######
 
 class uri:
 

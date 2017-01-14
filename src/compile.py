@@ -13,15 +13,22 @@ class COMPILATION_CODE:
     PASS = 1
     UNKNOWN_LANGUAGE = 2
     ERROR = 3
-    
+
 class compilation_exception(Exception):
     pass
 
 
-def detect_language(extension):
+def detect_language(st):
+    if '.' in st and st[0] != '.':
+        extension = os.path.splitext(st)[1]
+    else:
+        extension = st
+
     for language in prefs:
         if extension in prefs[language][u'extensions']:
             return language
+
+    print st, extension, 'hello'
     raise compilation_exception("Unknown language or language not supported or wrong filename")
 
 
