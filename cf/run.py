@@ -7,7 +7,8 @@ from collections import OrderedDict
 from subprocess import Popen, PIPE, call
 
 
-prefs = json.load(file('prefs.json'), object_pairs_hook=OrderedDict)
+prefs = json.load(file( os.path.join(os.path.dirname(__file__) ,'prefs.json')  ),
+                  object_pairs_hook=OrderedDict)
 
 # FileNotFoundError was only introduced in python 3
 # http://stackoverflow.com/questions/26745283/how-do-i-import-filenotfounderror-from-python-3

@@ -3,7 +3,8 @@ import os
 from collections import OrderedDict
 from subprocess import Popen, PIPE
 
-prefs = json.load(file('prefs.json'), object_pairs_hook=OrderedDict)
+prefs = json.load(file( os.path.join(os.path.dirname(__file__) ,'prefs.json')  ),
+                  object_pairs_hook=OrderedDict)
 
 # Enums were only introduced in python 3.4
 

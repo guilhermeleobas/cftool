@@ -18,7 +18,7 @@ setup (
     entry_points = {
         'console_scripts': [
             # 'skele=skele.cli:main',
-            'cf=src.cf:main'
+            'cf=cf.cf:main'
         ],
     },
 )
