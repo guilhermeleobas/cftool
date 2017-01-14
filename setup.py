@@ -12,6 +12,7 @@ setup (
     keywords = 'Codeforces',
     install_requires = open('requirements.txt').read().splitlines(),
     packages = find_packages(exclude=['docs', 'test*']),
+    include_package_data = True,
     extras_require = {
         'test': ['pytest'],
     },
