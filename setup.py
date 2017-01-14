@@ -12,13 +12,14 @@ setup (
     keywords = 'Codeforces',
     install_requires = open('requirements.txt').read().splitlines(),
     packages = find_packages(exclude=['docs', 'test*']),
+    package_data={'': ['cf/prefs.json']}
     extras_require = {
         'test': ['pytest'],
     },
     entry_points = {
         'console_scripts': [
             # 'skele=skele.cli:main',
-            'cf=src.cf:main'
+            'cf=cf.cf:main'
         ],
     },
 )
