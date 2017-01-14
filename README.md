@@ -1,5 +1,8 @@
 # cf
 Get inputs and outputs for a specific problem on [codeforces](https://www.codeforces.com).
+
+![Example](http://i.imgur.com/ZDCb1po.png?1)
+
 # Install
 
 Make sure you have Python installed.
