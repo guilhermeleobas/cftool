@@ -93,7 +93,6 @@ def main():
     init(autoreset=True)
 
     if p.command == 'get':
-        # to-do: launch exception if url was not recognize
         for site in sites:
             if site.is_me(p.url):
                 site.download(p.url)

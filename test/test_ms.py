@@ -1,4 +1,4 @@
-from cf.src.run import format_time
+from cf.run import format_time
 
 
 def test_ms():
@@ -21,7 +21,7 @@ def test_m():
     assert '1m' == format_time(1 * 1000 * 60)
     assert '2m' == format_time(1 * 1000 * 60 * 2 + 1 * 1000 * 60 * 0.49)
     assert '59m' == format_time(1 * 1000 * 60 * 59 + 100)
-    
+
 def test_h():
     assert '1h' == format_time (1 * 1000 * 60 * 60)
     assert '2h' == format_time (1 * 1000 * 60 * 60 * 2)

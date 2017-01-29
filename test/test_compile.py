@@ -1,4 +1,4 @@
-from cf.src.compile import *
+from cf.compile import *
 import pytest
 
 
@@ -138,11 +138,11 @@ def test_c_bad():
 
 def test_unknown_extension():
     filename = [ 'file.txt' , 'a.kc']
-   
+
     with pytest.raises(compilation_exception) as e_info:
         for f in filename:
             compile(f)
-    
+
 
 
 def test_cc_cpp():
@@ -156,12 +156,12 @@ def test_cc_cpp():
     }
 
     compare_dicts(ret, compile(filename))
-    
-    
+
+
 def test_cc_cpp11():
     filename = './test/scode/good.cc'
     language = 'c++11'
-    
+
     ret = {
         'status': COMPILATION_CODE.SUCCESS,
         'stdout': '',

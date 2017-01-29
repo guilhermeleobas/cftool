@@ -1,5 +1,5 @@
 # from __future__ import absolute_import
-from cf.src import html
+from cf import html
 
 CODEFORCES = 'http://codeforces.com/contest/'
 URI_PREFIX = 'https://www.urionlinejudge.com.br/repository/UOJ_'
@@ -256,6 +256,30 @@ def test_uri1400():
                 '27\n'
                 '35']
     }
+    print data, exp
+    compare_problem_dicts(exp, data)
+
+def test_uri1390():
+    url = URI_PREFIX + '1390' + URI_SUFFIX
+    uri = html.uri()
+
+    data = uri.parse_uri_problem(url)
+
+
+    exp = {
+        'in': ['6*9=42\n'
+               '10000+3*5*334=3*5000+10+0\n'
+               '2+2=3\n'
+               '2+2=4\n'
+               '0*0=0\n'
+               '='],
+        'out': ['13\n'
+                '6 10\n'
+                '*\n'
+                '5+\n'
+                '2+']
+    }
+
     print data, exp
     compare_problem_dicts(exp, data)
 

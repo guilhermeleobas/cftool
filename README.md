@@ -1,5 +1,5 @@
 # cf
-Get inputs and outputs for a specific problem on [codeforces](https://www.codeforces.com).
+Get inputs and outputs for a specific problem on [codeforces](https://www.codeforces.com) or [URI](www.urionlinejudge.com.br/).
 
 ![Example](http://i.imgur.com/ZDCb1po.png?1)
 
@@ -11,17 +11,21 @@ python -m pip install git+https://github.com/guilhermeleobas/cf
 ```
 
 # Version
-1.0
+1.1
 
 # Usage
 
 ### get
 ```
-cf get cf550A # Download inputs and outputs for problem 550A
-cf get cf600 # Download inputs and outputs for all problems on contest 600.
+cf get cf550A  # Download inputs and outputs for problem 550A
+cf get cf600   # Download inputs and outputs for all problems on contest 600.
+cf get uri1400 # URI
 ```
 
-You can also specify a Codeforces link to get inputs and outputs.
+You can also specify a link to get inputs and outputs.
+```
+cf get https://www.urionlinejudge.com.br/judge/pt/problems/view/1001
+```
 
 ### compile
 ```

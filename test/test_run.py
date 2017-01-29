@@ -3,8 +3,8 @@ import pytest
 import errno
 import sys
 
-from cf.src.run import run_code, run, run_me
-from cf.src.compile import compile
+from cf.run import run_code, run
+from cf.compile import compile
 
 def test_attributes():
     filename = './test/scode/echo.cc'
@@ -110,20 +110,20 @@ def test_message_folder_not_found():
     assert "[Errno 2] No such file or directory: './test/problems/lorem_ipsum_folder'" == str(excinfo.value)
 
 
-def test_message_empty_folder():
-    language = 'c++'
-    folder = './test/problems/empty_folder'
-    filename = './test/scode/echo.cc'
-
-    # print 'iniciou'
-    with pytest.raises (SystemExit) as excinfo:
-        run(filename, language, folder).next()
-    assert './test/problems/empty_folder directory is empty' == str(excinfo.value)
-    # print 'finalizou'
-
-    # with pytest.raises(SystemExit) as excinfo:
-        # run(filename, language, folder)
-    # assert './test/problems/empty_folder directory is empty' == str(excinfo.value)
+# def test_message_empty_folder():
+#     language = 'c++'
+#     folder = './test/problems/empty_folder'
+#     filename = './test/scode/echo.cc'
+#
+#     # print 'iniciou'
+#     with pytest.raises (SystemExit) as excinfo:
+#         run(filename, language, folder).next()
+#     assert './test/problems/empty_folder directory is empty' == str(excinfo.value)
+#     # print 'finalizou'
+#
+#     # with pytest.raises(SystemExit) as excinfo:
+#         # run(filename, language, folder)
+#     # assert './test/problems/empty_folder directory is empty' == str(excinfo.value)
 
 def test_python_echo():
     filename = './test/scode/echo.py'

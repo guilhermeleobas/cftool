@@ -95,8 +95,12 @@ class codeforces:
 class uri:
 
     patterns = [
-        '(https:?//)?(www.)?urionlinejudge.com.br/judge/(.*)/problems/view/(.*)',
+        '(?:https:?//)?(?:www.)?urionlinejudge.com.br/judge/(?:.*)/problems/view/(.*)', # Normal view
+        '(?:https:?//)?(?:www.)?urionlinejudge.com.br/repository/UOJ_(\d*)(?:_(?:.*))', # Full screen view
         'uri(\d+)']
+
+    URI_PREFIX = 'https://www.urionlinejudge.com.br/repository/UOJ_'
+    URI_SUFFIX = '_en.html'
 
     def parse_uri_contest(self, url):
         return None
@@ -124,10 +128,10 @@ class uri:
         r = requests.get(url)
         html = BeautifulSoup(r.content, 'html.parser')
 
-        data = html.find_all('td')
+        data = html.find('td', {'class': 'division'})
 
-        input = data[2].get_text().split('\n')
-        output = data[3].get_text().split('\n')
+        input = map (lambda x: x.strip(), data.get_text().strip().split('\n'))
+        output = map (lambda x: x.strip(), data.next_sibling.next_sibling.get_text().strip().split('\n'))
 
         inputs = cleanup(input)
         outputs = cleanup(output)
@@ -136,6 +140,14 @@ class uri:
             'in': inputs,
             'out': outputs
         }
+
+    def pattern_match(self, url):
+        for pattern in self.patterns:
+            m = re.match(pattern, url)
+
+            if m:
+                return [m.group(1)]
+        return None
 
     def is_me(self, url):
         """
@@ -146,6 +158,16 @@ class uri:
             if m:
                 return True
         return False
+
+
+    def download(self, url):
+        l = self.pattern_match(url)
+
+        aux = [self.parse_uri_problem (self.URI_PREFIX + l[0] + self.URI_SUFFIX)]
+        letters = ['uri' + l[0]]
+
+        for i, in_out in enumerate(aux):
+            save.save('uri', l[0], in_out)
 
 if __name__ == '__main__':
     uri = uri()

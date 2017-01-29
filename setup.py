@@ -13,9 +13,8 @@ setup (
     install_requires = open('requirements.txt').read().splitlines(),
     packages = find_packages(exclude=['docs', 'test*']),
     include_package_data = True,
-    extras_require = {
-        'test': ['pytest'],
-    },
+    setup_requires = ['pytest-runner'],
+    tests_require = ['pytest'],
     entry_points = {
         'console_scripts': [
             # 'skele=skele.cli:main',
