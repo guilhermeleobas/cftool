@@ -2,6 +2,7 @@
 
 import sys
 import argparse
+import os
 
 from colorama import init, Fore
 import re
@@ -88,6 +89,16 @@ def main():
                              type=str, required=False,
                              help='Pass a language as an optional parameter (i.e. c++11)')
 
+    test_cmd = subparsers.add_parser('test',
+                                    help='Test your code against a problem'\
+                                         ' with the same name as your file')
+    test_cmd.add_argument('file', action='store', type=str)
+    test_cmd.add_argument('-l', '--language', action='store',
+                          type=str, required=False,
+                          help='Pass a language as an optional parameter (i.e. c++11)')
+    test_cmd.add_argument('-s', '--single_input', action='store', type=str,
+                         required=False, help='Run only a single in/out')
+
     p = parser.parse_args()
 
     init(autoreset=True)
@@ -102,7 +113,10 @@ def main():
     elif p.command == 'compile':
         compile_file(p.file, p.language)
     else:
-        # run
+        # run or test
+        if p.command == 'test':
+            p.prob = os.path.splitext(p.file)[0]
+
         language = compile.detect_language(p.file)
         compile_file(p.file, language)
 
