@@ -2,12 +2,12 @@ from setuptools import setup, find_packages
 
 
 setup (
-    name = 'cf',
-    version = '1.0',
+    name = 'cftool',
+    version = '1.0.2',
     url = 'https://github.com/guilhermeleobas/cf',
     license = 'MIT',
     author = 'Guilherme Leobas',
-    # description = 'Get inputs and outputs from Codeforces and others online judges',
+    description = 'Get inputs and outputs from Codeforces and others online judges',
     long_description = open('README.md').read(),
     keywords = 'Codeforces',
     install_requires = open('requirements.txt').read().splitlines(),
