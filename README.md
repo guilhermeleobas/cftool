@@ -8,10 +8,11 @@ Get inputs and outputs for a specific problem on [codeforces](https://www.codefo
 Make sure you have Python installed.
 ```
 python -m pip install git+https://github.com/guilhermeleobas/cf
+python -m pip install cftool
 ```
 
 # Version
-1.2
+1.0.2
 
 # Usage
 
