@@ -3,8 +3,9 @@ import pytest
 import errno
 import sys
 
-from cf.run import run_code, run
-from cf.compile import compile
+from cftool.run import run_code, run
+from cftool.compile import compile
+from cftool.cftool import print_output
 
 def test_attributes():
     filename = './test/scode/echo.cc'
@@ -147,3 +148,12 @@ def test_generator():
             sys.exit('Test')
         f (x = False).next()
     assert 'Test' == str(excinfo.value)
+
+def test_SIGSEGV_msg(capsys):
+    msg = 'Process exited with SIGSEGV, probably because of a segmentation fault'
+    print_output({
+        'status': -11, 'stderr': '', 'stdout': '',
+        'time': '0ms', 'expected': '', 'testcase': 1
+    })
+    out, err = capsys.readouterr()
+    assert msg in out

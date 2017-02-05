@@ -123,18 +123,26 @@ class uri:
             arr = filter(lambda x: x not in undesired_characters, arr)
 
             # append all with \n
-            return ['\n'.join(arr)]
+            return '\n'.join(arr)
 
         r = requests.get(url)
         html = BeautifulSoup(r.content, 'html.parser')
 
-        data = html.find('td', {'class': 'division'})
+        datas = html.findAll('td', {'class': 'division'})
 
-        input = map (lambda x: x.strip(), data.get_text().strip().split('\n'))
-        output = map (lambda x: x.strip(), data.next_sibling.next_sibling.get_text().strip().split('\n'))
+        inputs = []
+        outputs = []
 
-        inputs = cleanup(input)
-        outputs = cleanup(output)
+        for data in datas:
+            # _in = map (lambda x: x.strip(),
+            #              data.get_text().strip().split('\n'))
+            # _out = map (lambda x: x.strip(),
+            #               data.next_sibling.next_sibling.get_text().strip().split('\n'))
+            _in =  cleanup(data.get_text().strip().split('\n'))
+            _out = cleanup(data.next_sibling.next_sibling.get_text().strip().split('\n'))
+
+            inputs.append(_in)
+            outputs.append(_out)
 
         return {
             'in': inputs,

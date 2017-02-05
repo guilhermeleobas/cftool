@@ -45,7 +45,12 @@ def print_output(obj):
 
     if obj['status'] != 0:
         print ( '~ Test #{} - '.format(obj['testcase']) + Fore.RED + 'ERROR')
-        print obj['stderr']
+        # In some cases the process spawn by cftool returns SIGSEGV (-11)
+        # and process.stderr is empty
+        if obj['stderr'] == '' and obj['status'] == -11:
+            print ('Process exited with SIGSEGV, probably because of a segmentation fault')
+        else:
+            print obj['stderr']
         return
 
     # split time between numbers and letters

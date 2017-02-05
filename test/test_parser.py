@@ -1,5 +1,5 @@
 # from __future__ import absolute_import
-from cf import html
+from cftool import html
 
 CODEFORCES = 'http://codeforces.com/contest/'
 URI_PREFIX = 'https://www.urionlinejudge.com.br/repository/UOJ_'
@@ -228,11 +228,72 @@ def test_uri1398():
     data = uri.parse_uri_problem(url)
 
     exp = {
-        'in': [u'0#\n'
-               '1010101#'],
+        'in': [
+            u'0#\n'
+            u'1010101#'
+        ],
         'out': [
             u'YES\n'
-            'NO'
+            u'NO'
+        ]
+    }
+
+    compare_problem_dicts(exp, data)
+
+def test_uri2178():
+    url = URI_PREFIX + '2178' + URI_SUFFIX
+    uri = html.uri()
+
+    data = uri.parse_uri_problem(url)
+
+    exp = {
+        'in': [
+            u'1 8\n3 1 2 3',
+            u'2 8\n3 1 2 3\n3 3 6 1'
+        ],
+        'out': [
+            '1',
+            '2'
+        ]
+    }
+
+    compare_problem_dicts(exp, data)
+
+def test_uri2454():
+    url = URI_PREFIX + '2454' + URI_SUFFIX
+    uri = html.uri()
+
+    data = uri.parse_uri_problem(url)
+
+    exp = {
+        'in': [
+            u'1 0',
+            u'0 0'
+        ],
+        'out': [
+            u'B',
+            u'C'
+        ]
+    }
+
+    compare_problem_dicts(exp, data)
+
+def test_uri2058():
+    url = URI_PREFIX + '2058' + URI_SUFFIX
+    uri = html.uri()
+
+    data = uri.parse_uri_problem(url)
+
+    exp = {
+        'in': [
+            u'3',
+            u'4',
+            u'5'
+        ],
+        'out': [
+            u'1',
+            u'2',
+            u'3'
         ]
     }
 

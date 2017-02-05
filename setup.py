@@ -4,7 +4,7 @@ from setuptools import setup, find_packages
 setup (
     name = 'cftool',
     version = '1.0.2',
-    url = 'https://github.com/guilhermeleobas/cf',
+    url = 'https://github.com/guilhermeleobas/cftool',
     license = 'MIT',
     author = 'Guilherme Leobas',
     description = 'Get inputs and outputs from Codeforces and others online judges',
@@ -18,7 +18,7 @@ setup (
     entry_points = {
         'console_scripts': [
             # 'skele=skele.cli:main',
-            'cf=cf.cf:main'
+            'cftool=cftool.cftool:main'
         ],
     },
 )

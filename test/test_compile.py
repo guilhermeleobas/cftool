@@ -1,4 +1,4 @@
-from cf.compile import *
+from cftool.compile import *
 import pytest
 
 
