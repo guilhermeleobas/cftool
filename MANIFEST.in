@@ -1,2 +1,2 @@
-include cf/prefs.json
+include cftool/prefs.json
 include README.md
