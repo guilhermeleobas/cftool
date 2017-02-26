@@ -168,4 +168,17 @@ def test_cc_cpp11():
         'stderr': ''
     }
 
-    compare_dicts(ret, compile(filename))
+    compare_dicts(ret, compile(filename, language))
+
+def test_cc_cpp11_using_args():
+    filename = './test/scode/good11.cpp'
+    # language = 'c++11'
+    args = '-std=c++11'
+
+    ret = {
+        'status': COMPILATION_CODE.SUCCESS,
+        'stdout': '',
+        'stderr': ''
+    }
+
+    compare_dicts(ret, compile(filename, args = args))

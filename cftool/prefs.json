@@ -1,6 +1,6 @@
 {
   "c++": {
-    "compile": "g++ {} -o main",
+    "compile": "g++ {args} {file} -o main",
     "run": "./main",
     "extensions": [
       ".cpp",
@@ -9,7 +9,7 @@
     ]
   },
   "c++11": {
-    "compile": "g++ -std=c++11 {} -o main",
+    "compile": "g++ -std=c++11 {args} {file} -o main",
     "run": "./main",
     "extensions": [
       ".cpp",
@@ -18,7 +18,7 @@
     ]
   },
   "c++14": {
-    "compile": "g++ -std=c++14 {} -o main",
+    "compile": "g++ -std=c++14 {args} {file} -o main",
     "run": "./main",
     "extensions": [
       ".cpp",
@@ -27,7 +27,7 @@
     ]
   },
   "c": {
-    "compile": "gcc {} -o main",
+    "compile": "gcc {args} {file} -o main",
     "run": "./main",
     "extensions": [
       ".c"
@@ -35,21 +35,21 @@
   },
   "python": {
     "compile": "pass",
-    "run": "python {}",
+    "run": "python {file}",
     "extensions": [
       ".py"
     ]
   },
   "python3": {
     "compile": "pass",
-    "run": "python3 {}",
+    "run": "python3 {file}",
     "extensions": [
       ".py"
     ]
   },
   "ruby:": {
     "compile": "pass",
-    "run": "rb {}",
+    "run": "rb {file}",
     "extensions": [
       ".rb"
     ]

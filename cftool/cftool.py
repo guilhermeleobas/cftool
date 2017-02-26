@@ -16,8 +16,9 @@ subparsers = parser.add_subparsers(dest='command')
 
 sites = [html.codeforces(), html.uri()]
 
-def compile_file (filename, language = None):
-    ret = compile.compile(filename, language)
+def compile_file (filename, language = None, args = ''):
+    print (args)
+    ret = compile.compile(filename, language = language, args = args)
     if ret['status'] == compile.COMPILATION_CODE.ERROR:
         print ('Compile: ' + Fore.RED + 'ERROR\n')
         print (ret['stderr'])
@@ -79,30 +80,81 @@ def main():
     # to-do
     # add command to show inputs
 
-    get_cmd = subparsers.add_parser('get', help='Get input/output for a problem or contest')
-    get_cmd.add_argument('url', action='store', type=str, help='Codeforces or URI url');
+    ##### --args subcommand #####
+    args_parser = argparse.ArgumentParser(add_help=False)
 
-    run_cmd = subparsers.add_parser('run', help='compile your code')
-    run_cmd.add_argument('file', action='store', type=str, help='File containing your solution')
-    run_cmd.add_argument('prob', action='store', type=str, help='Folder containing inputs and outputs')
-    run_cmd.add_argument('-s', '--single_input', action='store', type=str,
-                         required=False, help='Run only a single in/out')
+    args_parser.add_argument('--user', action="store")
+    args_parser.add_argument('-a', 
+                             '--args',
+                             action='store',
+                             type=str,
+                             required=False, 
+                             default='',
+                             help='Pass a list of arguments to the compiler or the interpreter')
 
-    compile_cmd = subparsers.add_parser('compile', help='Test your code against a problem')
-    compile_cmd.add_argument('file', action='store', type=str)
-    compile_cmd.add_argument('-l', '--language', action='store',
-                             type=str, required=False,
+
+    ##### --language subcommand #####
+    lang_parser = argparse.ArgumentParser(add_help=False)
+    lang_parser.add_argument('-l', 
+                             '--language', 
+                             action='store',
+                             type=str, 
+                             required=False,
                              help='Pass a language as an optional parameter (i.e. c++11)')
 
+
+    ##### --single_input subcommand #####
+    single_input_parser = argparse.ArgumentParser(add_help=False)
+
+    single_input_parser.add_argument('-s', 
+                              '--single_input', 
+                              action='store', 
+                              type=str,
+                              required=False, 
+                              help='Run only a single in/out')
+
+    ##### get cmd #####
+
+    get_cmd = subparsers.add_parser('get',
+                                    help='Get input/output for a problem or contest')
+    get_cmd.add_argument('url', 
+                         action='store', 
+                         type=str, 
+                         help='Codeforces or URI url');
+
+    ##### run cmd #####
+
+    run_cmd = subparsers.add_parser('run', 
+                                    help='compile your code', 
+                                    parents=[args_parser, lang_parser, single_input_parser])
+    run_cmd.add_argument('file', 
+                         action='store', 
+                         type=str, 
+                         help='File containing your solution')
+    run_cmd.add_argument('prob', 
+                         action='store', 
+                         type=str, 
+                         help='Folder containing inputs and outputs')
+
+    ##### compile cmd #####
+
+    compile_cmd = subparsers.add_parser('compile', 
+                                        help='Test your code against a problem', 
+                                        parents=[args_parser, lang_parser])
+    
+    compile_cmd.add_argument('file', action='store', type=str)
+    
+
+    ##### test cmd #####
+
     test_cmd = subparsers.add_parser('test',
-                                    help='Test your code against a problem'\
+                                     parents=[args_parser, lang_parser, single_input_parser],
+                                     help='Test your code against a problem'\
                                          ' with the same name as your file')
+    
     test_cmd.add_argument('file', action='store', type=str)
-    test_cmd.add_argument('-l', '--language', action='store',
-                          type=str, required=False,
-                          help='Pass a language as an optional parameter (i.e. c++11)')
-    test_cmd.add_argument('-s', '--single_input', action='store', type=str,
-                         required=False, help='Run only a single in/out')
+
+    ##### ----- #####
 
     p = parser.parse_args()
 
@@ -116,7 +168,7 @@ def main():
         else:
             sys.exit('URL not recognized')
     elif p.command == 'compile':
-        compile_file(p.file, p.language)
+        compile_file(p.file, p.language, p.args.replace('rgs=', ''))
     else:
         # run or test
         if p.command == 'test':

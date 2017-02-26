@@ -65,7 +65,7 @@ def run(filename, language, folder, single_input = None):
     outputs = [os.path.join(folder, f) for f in files if 'out' in f]
 
     # we already know that the language exists in prefs
-    run_cmd = prefs[language][u'run'].format(filename).split()
+    run_cmd = prefs[language][u'run'].format(file=filename).split()
 
     if single_input is not None:
         single_input = single_input.strip('.in|.out')
