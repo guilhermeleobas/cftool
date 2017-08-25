@@ -33,7 +33,7 @@ def detect_language(st):
     raise compilation_exception("Unknown language or language not supported or wrong filename")
 
 
-def compile(filename, language=None):
+def compile(filename, language=None, args=''):
     extension = os.path.splitext(filename)[1]
 
     # Get the language extension
@@ -52,14 +52,14 @@ def compile(filename, language=None):
     # Unknown language or language not supported or wrong filename
     if language is None:
         raise compilation_exception("Unknown language or language not supported or wrong filename")
-        # return {
-        #     'status': COMPILATION_CODE.UNKNOWN_LANGUAGE,
-        #     'stdout': '',
-        #     'stderr': ''
-        # }
-
+        
     # get the compile command for the language detected before
-    compile_command = prefs[language]['compile'].format(filename)
+    compile_command = prefs[language]['compile'].format(
+        args=args,
+        file=filename)
+
+    print (compile_command)
+ 
     if compile_command == 'pass':
         # Not necessary in interpreted languages (Python, Ruby, Javascript)
         return {
@@ -67,15 +67,6 @@ def compile(filename, language=None):
             'stdout': '',
             'stderr': ''
         }
-    # elif compile_command is None:
-    #     # return with error!
-    #     # language no supported or invalid file extension
-    #     raise compilation_exception("Unknown language")
-    #     # return {
-    #     #     'status': COMPILATION_CODE.UNKNOWN_LANGUAGE,
-    #     #     'stdout': '',
-    #     #     'stderr': ''
-    #     # }
 
     cmd = compile_command.split(' ')
 
