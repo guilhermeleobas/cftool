@@ -7,7 +7,7 @@ import os
 from colorama import init, Fore
 import re
 
-import html
+import html_parser as html
 import compile
 from run import run
 
@@ -51,7 +51,7 @@ def print_output(obj):
         if obj['stderr'] == '' and obj['status'] == -11:
             print ('Process exited with SIGSEGV, probably because of a segmentation fault')
         else:
-            print obj['stderr']
+            print (obj['stderr'])
         return
 
     # split time between numbers and letters
@@ -83,7 +83,6 @@ def main():
     ##### --args subcommand #####
     args_parser = argparse.ArgumentParser(add_help=False)
 
-    args_parser.add_argument('--user', action="store")
     args_parser.add_argument('-a', 
                              '--args',
                              action='store',
@@ -159,7 +158,7 @@ def main():
     p = parser.parse_args()
 
     init(autoreset=True)
-
+    
     if p.command == 'get':
         for site in sites:
             if site.is_me(p.url):
@@ -169,7 +168,7 @@ def main():
             sys.exit('URL not recognized')
     elif p.command == 'compile':
         compile_file(p.file, p.language, p.args.replace('rgs=', ''))
-    else:
+    elif (p.command == 'run' or p.command == 'test'):
         # run or test
         if p.command == 'test':
             p.prob = os.path.splitext(p.file)[0]
@@ -182,6 +181,9 @@ def main():
 
             if p.single_input:
                 break
+    else:
+        parser.print_help()
+        sys.exit(1)
 
 if __name__ == '__main__':
     main()

@@ -3,7 +3,7 @@ import os
 from collections import OrderedDict
 from subprocess import Popen, PIPE
 
-prefs = json.load(file( os.path.join(os.path.dirname(__file__) ,'prefs.json')  ),
+prefs = json.load(open( os.path.join(os.path.dirname(__file__) ,'prefs.json')  ),
                   object_pairs_hook=OrderedDict)
 
 # Enums were only introduced in python 3.4
@@ -29,7 +29,6 @@ def detect_language(st):
         if extension in prefs[language][u'extensions']:
             return language
 
-    print st, extension, 'hello'
     raise compilation_exception("Unknown language or language not supported or wrong filename")
 
 
@@ -89,5 +88,7 @@ def compile(filename, language=None, args=''):
         }
 
 if __name__ == '__main__':
-    print compile('a.cc')
-    print compile('a.py')
+    # print compile('a.cc')
+    # print compile('a.py')
+    print (compile('a.cc'))
+
