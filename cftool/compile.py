@@ -57,7 +57,7 @@ def compile(filename, language=None, args=''):
         args=args,
         file=filename)
 
-    print (compile_command)
+    print ("Command: {cmd}".format(cmd=compile_command))
  
     if compile_command == 'pass':
         # Not necessary in interpreted languages (Python, Ruby, Javascript)

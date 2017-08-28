@@ -1,14 +1,5 @@
 {
   "c++": {
-    "compile": "g++ {args} {file} -o main",
-    "run": "./main",
-    "extensions": [
-      ".cpp",
-      ".cc",
-      ".cxx"
-    ]
-  },
-  "c++11": {
     "compile": "g++ -std=c++11 {args} {file} -o main",
     "run": "./main",
     "extensions": [
