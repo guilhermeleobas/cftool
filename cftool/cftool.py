@@ -1,18 +1,17 @@
 #!/usr/bin/env python
 
 import sys
-import argparse
+from args import get_args, get_parser
 import os
 
 from colorama import init, Fore
 import re
 
-import html
+import html_parser as html
 import compile
 from run import run
 
-parser = argparse.ArgumentParser()
-subparsers = parser.add_subparsers(dest='command')
+init(autoreset=True)
 
 sites = [html.codeforces(), html.uri()]
 
@@ -51,7 +50,7 @@ def print_output(obj):
         if obj['stderr'] == '' and obj['status'] == -11:
             print ('Process exited with SIGSEGV, probably because of a segmentation fault')
         else:
-            print obj['stderr']
+            print (obj['stderr'])
         return
 
     # split time between numbers and letters
@@ -79,87 +78,8 @@ def print_output(obj):
 def main():
     # to-do
     # add command to show inputs
-
-    ##### --args subcommand #####
-    args_parser = argparse.ArgumentParser(add_help=False)
-
-    args_parser.add_argument('--user', action="store")
-    args_parser.add_argument('-a', 
-                             '--args',
-                             action='store',
-                             type=str,
-                             required=False, 
-                             default='',
-                             help='Pass a list of arguments to the compiler or the interpreter')
-
-
-    ##### --language subcommand #####
-    lang_parser = argparse.ArgumentParser(add_help=False)
-    lang_parser.add_argument('-l', 
-                             '--language', 
-                             action='store',
-                             type=str, 
-                             required=False,
-                             help='Pass a language as an optional parameter (i.e. c++11)')
-
-
-    ##### --single_input subcommand #####
-    single_input_parser = argparse.ArgumentParser(add_help=False)
-
-    single_input_parser.add_argument('-s', 
-                              '--single_input', 
-                              action='store', 
-                              type=str,
-                              required=False, 
-                              help='Run only a single in/out')
-
-    ##### get cmd #####
-
-    get_cmd = subparsers.add_parser('get',
-                                    help='Get input/output for a problem or contest')
-    get_cmd.add_argument('url', 
-                         action='store', 
-                         type=str, 
-                         help='Codeforces or URI url');
-
-    ##### run cmd #####
-
-    run_cmd = subparsers.add_parser('run', 
-                                    help='compile your code', 
-                                    parents=[args_parser, lang_parser, single_input_parser])
-    run_cmd.add_argument('file', 
-                         action='store', 
-                         type=str, 
-                         help='File containing your solution')
-    run_cmd.add_argument('prob', 
-                         action='store', 
-                         type=str, 
-                         help='Folder containing inputs and outputs')
-
-    ##### compile cmd #####
-
-    compile_cmd = subparsers.add_parser('compile', 
-                                        help='Test your code against a problem', 
-                                        parents=[args_parser, lang_parser])
+    p = get_args()
     
-    compile_cmd.add_argument('file', action='store', type=str)
-    
-
-    ##### test cmd #####
-
-    test_cmd = subparsers.add_parser('test',
-                                     parents=[args_parser, lang_parser, single_input_parser],
-                                     help='Test your code against a problem'\
-                                         ' with the same name as your file')
-    
-    test_cmd.add_argument('file', action='store', type=str)
-
-    ##### ----- #####
-
-    p = parser.parse_args()
-
-    init(autoreset=True)
-
     if p.command == 'get':
         for site in sites:
             if site.is_me(p.url):
@@ -169,7 +89,7 @@ def main():
             sys.exit('URL not recognized')
     elif p.command == 'compile':
         compile_file(p.file, p.language, p.args.replace('rgs=', ''))
-    else:
+    elif (p.command == 'run' or p.command == 'test'):
         # run or test
         if p.command == 'test':
             p.prob = os.path.splitext(p.file)[0]
@@ -182,6 +102,9 @@ def main():
 
             if p.single_input:
                 break
+    else:
+        get_parser().print_help()
+        sys.exit(1)
 
 if __name__ == '__main__':
     main()

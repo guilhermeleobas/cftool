@@ -7,7 +7,7 @@ from collections import OrderedDict
 from subprocess import Popen, PIPE, call
 
 
-prefs = json.load(file( os.path.join(os.path.dirname(__file__) ,'prefs.json')  ),
+prefs = json.load(open( os.path.join(os.path.dirname(__file__) ,'prefs.json')  ),
                   object_pairs_hook=OrderedDict)
 
 # FileNotFoundError was only introduced in python 3
@@ -83,4 +83,4 @@ def run(filename, language, folder, single_input = None):
         yield (run_code(run_cmd, os.path.join(folder, input), outputs[i], test_number))
 
 if __name__ == '__main__':
-    print run_code('./main', 'a.cc')
+    print (run_code('./main', 'a.cc'))
