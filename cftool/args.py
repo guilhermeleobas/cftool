@@ -27,7 +27,7 @@ def lang_subcommand():
         action='store',
         type=str,
         required=False,
-        help='Pass a language as an optional parameter (i.e. c++11)')
+        help='Pass a language as an optional parameter (i.e. c++14/python3/ruby/...)')
     return lang
 
 
