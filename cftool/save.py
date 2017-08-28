@@ -32,8 +32,8 @@ def save(site_id, problem_id, data):
         input_filename = os.path.join(dir_name, str(i) + '.in')
         output_filename = os.path.join(dir_name, str(i) + '.out')
 
-        f_in = file(input_filename, 'w')
-        f_out = file(output_filename, 'w')
+        f_in = open(input_filename, 'w')
+        f_out = open(output_filename, 'w')
 
         f_in.write(data['in'][i])
         f_out.write(data['out'][i])
