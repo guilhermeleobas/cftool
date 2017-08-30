@@ -1,5 +1,5 @@
 # from __future__ import absolute_import
-from cftool import html
+from cftool import html_parser as html
 
 CODEFORCES = 'http://codeforces.com/contest/'
 URI_PREFIX = 'https://www.urionlinejudge.com.br/repository/UOJ_'

@@ -160,7 +160,7 @@ def test_cc_cpp():
 
 def test_cc_cpp11():
     filename = './test/scode/good.cc'
-    language = 'c++11'
+    language = 'c++'
 
     ret = {
         'status': COMPILATION_CODE.SUCCESS,

@@ -3,7 +3,7 @@ from setuptools import setup, find_packages
 
 setup (
     name = 'cftool',
-    version = '1.0.6',
+    version = '1.0.7',
     url = 'https://github.com/guilhermeleobas/cftool',
     license = 'MIT',
     author = 'Guilherme Leobas',
